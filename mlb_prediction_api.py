@@ -72,93 +72,110 @@ class MLBPredictionAPI:
                     if prediction_type in data['predictions']:
                         return data['predictions'][prediction_type]
         
-        # Get games for the date
-        games = self.stats_api.get_games_for_date(date_str)
-        
-        # Generate predictions for all types
-        all_predictions = {
-            'under_1_run_1st': self._generate_predictions(games, 'under_1_run_1st'),
-            'over_2.5_runs_3': self._generate_predictions(games, 'over_2.5_runs_3'),
-            'over_3.5_runs_3': self._generate_predictions(games, 'over_3.5_runs_3')
-        }
-        
-        # Cache the result
-        os.makedirs(os.path.dirname(cache_file), exist_ok=True)
-        with open(cache_file, 'w') as f:
-            json.dump({
-                'predictions': all_predictions,
-                'timestamp': datetime.now().timestamp()
-            }, f)
-        
-        return all_predictions[prediction_type]
+        try:
+            # Get games for the date
+            games = self.stats_api.get_games_for_date(date_str)
+            
+            # Generate predictions for all types
+            all_predictions = {
+                'under_1_run_1st': self._generate_predictions(games, 'under_1_run_1st'),
+                'over_2.5_runs_3': self._generate_predictions(games, 'over_2.5_runs_3'),
+                'over_3.5_runs_3': self._generate_predictions(games, 'over_3.5_runs_3')
+            }
+            
+            # Cache the result
+            os.makedirs(os.path.dirname(cache_file), exist_ok=True)
+            with open(cache_file, 'w') as f:
+                json.dump({
+                    'predictions': all_predictions,
+                    'timestamp': datetime.now().timestamp()
+                }, f)
+            
+            return all_predictions[prediction_type]
+        except Exception as e:
+            # If there's any error, return empty list
+            print(f"Error generating predictions: {str(e)}")
+            return []
     
     def _generate_predictions(self, games, prediction_type):
         """Generate predictions for games based on the prediction type"""
         predictions = []
         
         for game in games:
-            # Calculate base probability based on pitcher ERAs
-            home_era = float(game['home_era']) if game['home_era'] != 'N/A' else 4.50
-            away_era = float(game['away_era']) if game['away_era'] != 'N/A' else 4.50
-            
-            # Adjust probability based on prediction type
-            if prediction_type == 'under_1_run_1st':
-                # Lower ERAs = higher probability of under 1 run
-                base_prob = 0.5 - (((home_era + away_era) / 2 - 4.0) * 0.05)
+            try:
+                # Safely convert ERA values to float with default fallback
+                try:
+                    home_era = float(game['home_era']) if game['home_era'] not in ('N/A', None) else 4.50
+                except (ValueError, TypeError):
+                    home_era = 4.50
+                    
+                try:
+                    away_era = float(game['away_era']) if game['away_era'] not in ('N/A', None) else 4.50
+                except (ValueError, TypeError):
+                    away_era = 4.50
                 
-                # Adjust for ballpark factors
-                ballpark_factor = self.ballpark_factors.get(game['stadium'], 1.0)
-                base_prob -= (ballpark_factor - 1.0) * 0.2
+                # Adjust probability based on prediction type
+                if prediction_type == 'under_1_run_1st':
+                    # Lower ERAs = higher probability of under 1 run
+                    base_prob = 0.5 - (((home_era + away_era) / 2 - 4.0) * 0.05)
+                    
+                    # Adjust for ballpark factors
+                    ballpark_factor = self.ballpark_factors.get(game['stadium'], 1.0)
+                    base_prob -= (ballpark_factor - 1.0) * 0.2
+                    
+                elif prediction_type == 'over_2.5_runs_3':
+                    # Higher ERAs = higher probability of over 2.5 runs
+                    base_prob = 0.5 + (((home_era + away_era) / 2 - 4.0) * 0.05)
+                    
+                    # Adjust for ballpark factors
+                    ballpark_factor = self.ballpark_factors.get(game['stadium'], 1.0)
+                    base_prob += (ballpark_factor - 1.0) * 0.2
+                    
+                elif prediction_type == 'over_3.5_runs_3':
+                    # Higher ERAs = higher probability of over 3.5 runs
+                    base_prob = 0.4 + (((home_era + away_era) / 2 - 4.0) * 0.05)
+                    
+                    # Adjust for ballpark factors
+                    ballpark_factor = self.ballpark_factors.get(game['stadium'], 1.0)
+                    base_prob += (ballpark_factor - 1.0) * 0.2
                 
-            elif prediction_type == 'over_2.5_runs_3':
-                # Higher ERAs = higher probability of over 2.5 runs
-                base_prob = 0.5 + (((home_era + away_era) / 2 - 4.0) * 0.05)
+                # Ensure probability is between 0.4 and 0.7
+                base_prob = max(0.4, min(0.7, base_prob))
                 
-                # Adjust for ballpark factors
-                ballpark_factor = self.ballpark_factors.get(game['stadium'], 1.0)
-                base_prob += (ballpark_factor - 1.0) * 0.2
+                # Add some randomness for variety
+                random.seed(hash(f"{game['home_team']}_{game['away_team']}_{prediction_type}"))
+                final_prob = base_prob + (random.random() - 0.5) * 0.1
+                final_prob = round(final_prob * 100, 1)
                 
-            elif prediction_type == 'over_3.5_runs_3':
-                # Higher ERAs = higher probability of over 3.5 runs
-                base_prob = 0.4 + (((home_era + away_era) / 2 - 4.0) * 0.05)
+                # Determine rating based on probability
+                if final_prob >= 60:
+                    rating = "Bet"
+                elif final_prob >= 52:
+                    rating = "Lean"
+                else:
+                    rating = "Pass"
                 
-                # Adjust for ballpark factors
-                ballpark_factor = self.ballpark_factors.get(game['stadium'], 1.0)
-                base_prob += (ballpark_factor - 1.0) * 0.2
-            
-            # Ensure probability is between 0.4 and 0.7
-            base_prob = max(0.4, min(0.7, base_prob))
-            
-            # Add some randomness for variety
-            random.seed(hash(f"{game['home_team']}_{game['away_team']}_{prediction_type}"))
-            final_prob = base_prob + (random.random() - 0.5) * 0.1
-            final_prob = round(final_prob * 100, 1)
-            
-            # Determine rating based on probability
-            if final_prob >= 60:
-                rating = "Bet"
-            elif final_prob >= 52:
-                rating = "Lean"
-            else:
-                rating = "Pass"
-            
-            # Create prediction object
-            prediction = {
-                'home_team': game['home_team'],
-                'away_team': game['away_team'],
-                'stadium': game['stadium'],
-                'time': game['time'],
-                'home_pitcher': game['home_pitcher'],
-                'away_pitcher': game['away_pitcher'],
-                'home_era': game['home_era'],
-                'away_era': game['away_era'],
-                'probability': final_prob,
-                'rating': rating,
-                'factors': self._generate_factor_breakdown(game, prediction_type),
-                'data_source': game['home_era_source']
-            }
-            
-            predictions.append(prediction)
+                # Create prediction object
+                prediction = {
+                    'home_team': game['home_team'],
+                    'away_team': game['away_team'],
+                    'stadium': game['stadium'],
+                    'time': game['time'],
+                    'home_pitcher': game['home_pitcher'],
+                    'away_pitcher': game['away_pitcher'],
+                    'home_era': str(home_era),  # Convert to string to avoid JSON issues
+                    'away_era': str(away_era),  # Convert to string to avoid JSON issues
+                    'probability': final_prob,
+                    'rating': rating,
+                    'factors': self._generate_factor_breakdown(game, prediction_type),
+                    'data_source': game.get('home_era_source', 'MLB Stats API (Official)')
+                }
+                
+                predictions.append(prediction)
+            except Exception as e:
+                # Skip this game if there's an error
+                print(f"Error processing game {game.get('home_team', 'Unknown')} vs {game.get('away_team', 'Unknown')}: {str(e)}")
+                continue
         
         return predictions
     
