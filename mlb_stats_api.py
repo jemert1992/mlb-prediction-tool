@@ -448,25 +448,26 @@ class MLBStatsAPI:
                     
                     player_id = pitcher.get('id')
                     
-                    # Get player stats
-                    stats_url = f"{self.mlb_api_base_url}/people/{player_id}/stats?stats=season&season=2025&group=pitching"
-                    stats_response = requests.get(stats_url, timeout=5)
-                    
-                    if stats_response.status_code == 200:
-                        stats_data = stats_response.json()
+                    if player_id:
+                        # Get player stats
+                        stats_url = f"{self.mlb_api_base_url}/people/{player_id}/stats?stats=season&season=2025&group=pitching"
+                        stats_response = requests.get(stats_url, timeout=5)
                         
-                        if 'stats' in stats_data and stats_data['stats'] and 'splits' in stats_data['stats'][0]:
-                            splits = stats_data['stats'][0]['splits']
+                        if stats_response.status_code == 200:
+                            stats_data = stats_response.json()
                             
-                            if splits:
-                                era = splits[0].get('stat', {}).get('era')
+                            if 'stats' in stats_data and stats_data['stats'] and 'splits' in stats_data['stats'][0]:
+                                splits = stats_data['stats'][0]['splits']
                                 
-                                if era is not None:
-                                    result = {'era': era, 'source': 'MLB Stats API', 'method': 'api-lookup'}
-                                    self.save_to_cache(cache_key, result)
-                                    return result
+                                if splits:
+                                    era = splits[0].get('stat', {}).get('era')
+                                    
+                                    if era:
+                                        result = {'era': float(era), 'source': 'MLB Stats API', 'method': 'player-lookup'}
+                                        self.save_to_cache(cache_key, result)
+                                        return result
             
-            # If we get here, we couldn't find the pitcher's ERA from the API
+            # If we get here, we couldn't find the ERA from the API
             # Try fallback
             if pitcher_name in self.era_mapping:
                 era = self.era_mapping.get(pitcher_name)
@@ -474,24 +475,29 @@ class MLBStatsAPI:
                 self.save_to_cache(cache_key, result)
                 return result
             
-            logger.error(f"Pitcher ERA not found: {pitcher_name} for team {team_name}")
-            return {'era': 4.50, 'source': 'MLB Stats API (Default)', 'method': 'default-value'}
+            # If all else fails, use default ERA
+            result = {'era': 4.50, 'source': 'MLB Stats API (Default)', 'method': 'default-value'}
+            self.save_to_cache(cache_key, result)
+            return result
             
         except Exception as e:
-            logger.error(f"Error getting pitcher ERA: {e}")
+            logger.error(f"Error getting pitcher ERA for {pitcher_name} ({team_name}): {e}")
             
             # Try fallback
             if pitcher_name in self.era_mapping:
                 era = self.era_mapping.get(pitcher_name)
-                result = {'era': era, 'source': 'MLB Stats API (Fallback)', 'method': 'name-lookup'}
+                result = {'era': era, 'source': 'MLB Stats API (Fallback)', 'method': 'name-lookup-exception'}
                 self.save_to_cache(cache_key, result)
                 return result
             
-            return {'era': 4.50, 'source': 'MLB Stats API (Default)', 'method': 'default-value'}
+            # If all else fails, use default ERA
+            result = {'era': 4.50, 'source': 'MLB Stats API (Default)', 'method': 'default-value-exception'}
+            self.save_to_cache(cache_key, result)
+            return result
     
-    def get_games_for_date(self, date_str, force_refresh=False):
+    def get_games(self, date_str, force_refresh=False):
         """
-        Get MLB games for a specific date from the MLB Stats API
+        Get MLB games for a specific date
         
         Args:
             date_str: Date string in format YYYY-MM-DD
@@ -697,13 +703,37 @@ class MLBStatsAPI:
                                 splits = stats_data['stats'][0]['splits']
                                 
                                 if splits:
+                                    # FIX: Convert all values to appropriate types before any operations
                                     team_era = splits[0].get('stat', {}).get('era')
+                                    if team_era is not None:
+                                        team_era = float(team_era)
+                                    else:
+                                        team_era = 4.0
+                                        
                                     team_whip = splits[0].get('stat', {}).get('whip')
+                                    if team_whip is not None:
+                                        team_whip = float(team_whip)
+                                    else:
+                                        team_whip = 1.3
+                                        
                                     team_strikeouts = splits[0].get('stat', {}).get('strikeOuts')
+                                    if team_strikeouts is not None:
+                                        team_strikeouts = int(team_strikeouts)
+                                    else:
+                                        team_strikeouts = 500
+                                        
                                     team_walks = splits[0].get('stat', {}).get('walks')
+                                    if team_walks is not None:
+                                        team_walks = int(team_walks)
+                                    else:
+                                        team_walks = 200
                                     
-                                    # Get bullpen stats (approximation)
-                                    bullpen_era = team_era + 0.5 if team_era else 4.5  # Bullpen typically has higher ERA
+                                    # FIX: Ensure bullpen_era is calculated with proper type handling
+                                    # Use explicit float conversion and handle None case
+                                    if team_era is not None:
+                                        bullpen_era = float(team_era) + 0.5
+                                    else:
+                                        bullpen_era = 4.5
                                     
                                     # Create team stats object
                                     team_stats = {
@@ -743,9 +773,10 @@ class MLBStatsAPI:
             logger.error(f"Error getting team stats for {team_name}: {e}")
             
             # Return fallback data
+            team_abbr_safe = team_abbr if team_abbr else 'UNK'
             fallback_stats = {
                 'team_name': team_name,
-                'team_abbr': team_abbr if team_abbr else 'UNK',
+                'team_abbr': team_abbr_safe,
                 'team_era': 4.0,  # Fallback ERA
                 'team_whip': 1.3,  # Fallback WHIP
                 'team_strikeouts': 500,  # Fallback strikeouts
