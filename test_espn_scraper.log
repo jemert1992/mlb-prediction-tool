@@ -1,0 +1,70 @@
+2025-04-16 16:21:12,759 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Yankees_Gerrit_Cole
+2025-04-16 16:21:12,759 - espn_direct_scraper - INFO - Using cached data for espn_era_Los_Angeles_Dodgers_Clayton_Kershaw
+2025-04-16 16:21:12,759 - espn_direct_scraper - INFO - Using cached data for espn_era_Boston_Red_Sox_Chris_Sale
+2025-04-16 16:21:12,759 - espn_direct_scraper - INFO - Using cached data for espn_era_Houston_Astros_Justin_Verlander
+2025-04-16 16:21:12,759 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Mets_Max_Scherzer
+2025-04-16 16:21:12,759 - espn_direct_scraper - INFO - Using cached data for espn_era_Texas_Rangers_Jacob_deGrom
+2025-04-16 16:21:12,760 - espn_direct_scraper - INFO - Using cached data for espn_era_Cleveland_Guardians_Shane_Bieber
+2025-04-16 16:21:12,760 - espn_direct_scraper - INFO - Using cached data for espn_era_Philadelphia_Phillies_Zack_Wheeler
+2025-04-16 16:21:12,760 - espn_direct_scraper - INFO - Using cached data for espn_era_Milwaukee_Brewers_Corbin_Burnes
+2025-04-16 16:21:12,760 - espn_direct_scraper - INFO - Using cached data for espn_era_San_Diego_Padres_Yu_Darvish
+2025-04-16 16:22:04,898 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Yankees_Gerrit_Cole
+2025-04-16 16:22:04,898 - espn_direct_scraper - INFO - Using cached data for espn_era_Los_Angeles_Dodgers_Clayton_Kershaw
+2025-04-16 16:22:04,899 - espn_direct_scraper - INFO - Using cached data for espn_era_Boston_Red_Sox_Chris_Sale
+2025-04-16 16:22:04,899 - espn_direct_scraper - INFO - Using cached data for espn_era_Houston_Astros_Justin_Verlander
+2025-04-16 16:22:04,899 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Mets_Max_Scherzer
+2025-04-16 16:22:04,899 - espn_direct_scraper - INFO - Using cached data for espn_era_Texas_Rangers_Jacob_deGrom
+2025-04-16 16:22:04,899 - espn_direct_scraper - INFO - Using cached data for espn_era_Cleveland_Guardians_Shane_Bieber
+2025-04-16 16:22:04,899 - espn_direct_scraper - INFO - Using cached data for espn_era_Philadelphia_Phillies_Zack_Wheeler
+2025-04-16 16:22:04,900 - espn_direct_scraper - INFO - Using cached data for espn_era_Milwaukee_Brewers_Corbin_Burnes
+2025-04-16 16:22:04,900 - espn_direct_scraper - INFO - Using cached data for espn_era_San_Diego_Padres_Yu_Darvish
+2025-04-16 16:22:05,035 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Yankees_Gerrit_Cole
+2025-04-16 16:22:05,037 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team nyy
+2025-04-16 16:22:05,037 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_nyy
+2025-04-16 16:22:05,037 - espn_direct_scraper - INFO - Using cached data for espn_era_Los_Angeles_Dodgers_Clayton_Kershaw
+2025-04-16 16:22:05,038 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team lad
+2025-04-16 16:22:05,038 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_lad
+2025-04-16 16:22:05,038 - espn_direct_scraper - INFO - Using cached data for espn_era_Boston_Red_Sox_Chris_Sale
+2025-04-16 16:22:05,038 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team bos
+2025-04-16 16:22:05,038 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_bos
+2025-04-16 16:22:05,039 - espn_direct_scraper - INFO - Using cached data for espn_era_Houston_Astros_Justin_Verlander
+2025-04-16 16:22:05,039 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team hou
+2025-04-16 16:22:05,039 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_hou
+2025-04-16 16:22:05,039 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Mets_Max_Scherzer
+2025-04-16 16:22:05,039 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team nym
+2025-04-16 16:22:05,039 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_nym
+2025-04-16 16:22:05,040 - espn_direct_scraper - INFO - Using cached data for espn_era_Texas_Rangers_Jacob_deGrom
+2025-04-16 16:22:05,040 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team tex
+2025-04-16 16:22:05,040 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_tex
+2025-04-16 16:22:05,040 - espn_direct_scraper - INFO - Using cached data for espn_era_Cleveland_Guardians_Shane_Bieber
+2025-04-16 16:22:05,040 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team cle
+2025-04-16 16:22:05,040 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_cle
+2025-04-16 16:22:05,041 - espn_direct_scraper - INFO - Using cached data for espn_era_Philadelphia_Phillies_Zack_Wheeler
+2025-04-16 16:22:05,041 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team phi
+2025-04-16 16:22:05,041 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_phi
+2025-04-16 16:22:05,041 - espn_direct_scraper - INFO - Using cached data for espn_era_Milwaukee_Brewers_Corbin_Burnes
+2025-04-16 16:22:05,041 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team mil
+2025-04-16 16:22:05,042 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_mil
+2025-04-16 16:22:05,042 - espn_direct_scraper - INFO - Using cached data for espn_era_San_Diego_Padres_Yu_Darvish
+2025-04-16 16:22:05,042 - MLBPredictionAPI - INFO - Fetched 1 pitcher stats for team sd
+2025-04-16 16:22:05,042 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_sd
+2025-04-16 16:22:05,042 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Yankees_Gerrit_Cole
+2025-04-16 16:22:05,042 - espn_direct_scraper - INFO - Using cached data for espn_era_Los_Angeles_Dodgers_Clayton_Kershaw
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_Boston_Red_Sox_Chris_Sale
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_Houston_Astros_Justin_Verlander
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_New_York_Mets_Max_Scherzer
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_Texas_Rangers_Jacob_deGrom
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_Cleveland_Guardians_Shane_Bieber
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_Philadelphia_Phillies_Zack_Wheeler
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_Milwaukee_Brewers_Corbin_Burnes
+2025-04-16 16:22:05,043 - espn_direct_scraper - INFO - Using cached data for espn_era_San_Diego_Padres_Yu_Darvish
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_nyy
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_lad
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_bos
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_hou
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_nym
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_tex
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_cle
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_phi
+2025-04-16 16:22:05,044 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_mil
+2025-04-16 16:22:05,045 - MLBPredictionAPI - INFO - Using cached data for pitcher_stats_sd
