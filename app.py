@@ -1,189 +1,154 @@
+from flask import Flask, jsonify, render_template, request
 import os
 import json
 import logging
-from datetime import datetime
-from flask import Flask, render_template, jsonify, request
+from datetime import datetime, timedelta
 from mlb_prediction_api import MLBPredictionAPI
-from mlb_stats_api import MLBStatsAPI
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger('mlb_prediction_tool')
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    filename='app.log')
+logger = logging.getLogger('app')
 
+# Initialize Flask app
 app = Flask(__name__)
-prediction_api = MLBPredictionAPI()
-stats_api = MLBStatsAPI()
+
+# Initialize MLB prediction API
+mlb_prediction_api = MLBPredictionAPI()
 
 @app.route('/')
 def index():
-    """Render the main page"""
-    # Get current date in YYYY-MM-DD format
-    today = datetime.now().strftime('%Y-%m-%d')
-    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    return render_template('index.html', date=today, now=now)
+    """
+    Render the index page
+    """
+    return render_template('index.html')
 
-@app.route('/api/predictions')
+@app.route('/api/predictions', methods=['GET'])
 def get_predictions():
-    """API endpoint to get predictions"""
-    prediction_type = request.args.get('type', 'under_1_run_1st')
-    date_str = request.args.get('date', datetime.now().strftime('%Y-%m-%d'))
-    
-    # Map prediction type to internal type
-    type_mapping = {
-        'under_1_run_1st': 'under_1_run_1st',
-        'over_2.5_runs_3': 'over_2.5_runs_3',
-        'over_3.5_runs_3': 'over_3.5_runs_3'
-    }
-    
-    internal_type = type_mapping.get(prediction_type, 'under_1_run_1st')
-    
+    """
+    Get all predictions for a specific date
+    """
     try:
-        logger.info(f"Getting predictions for type: {internal_type}, date: {date_str}")
-        predictions = prediction_api.get_predictions(internal_type, date_str)
+        # Get query parameters
+        date_str = request.args.get('date')
+        force_refresh = request.args.get('refresh', 'false').lower() == 'true'
         
-        # If predictions is empty, generate sample data
-        if not predictions:
-            logger.warning(f"No predictions found, generating sample data")
-            predictions = generate_sample_predictions(internal_type)
-            
+        # Get predictions
+        predictions = mlb_prediction_api.get_all_predictions(force_refresh, date_str)
+        
         return jsonify(predictions)
     except Exception as e:
-        logger.error(f"Error getting predictions: {str(e)}", exc_info=True)
-        # Return sample data on error
-        sample_predictions = generate_sample_predictions(internal_type)
-        return jsonify(sample_predictions)
+        logger.error(f"Error getting predictions: {e}")
+        return jsonify({'error': str(e)}), 500
 
-@app.route('/api/refresh')
-def refresh_data():
-    """API endpoint to refresh data"""
+@app.route('/api/predictions/<prediction_type>', methods=['GET'])
+def get_predictions_by_type(prediction_type):
+    """
+    Get predictions for a specific type and date
+    """
     try:
-        # Clear caches
-        logger.info("Refreshing data - clearing caches")
-        stats_api.clear_cache()
-        prediction_api.clear_cache()
-        return jsonify({"status": "success", "message": "Data refreshed successfully"})
+        # Get query parameters
+        date_str = request.args.get('date')
+        force_refresh = request.args.get('refresh', 'false').lower() == 'true'
+        
+        # Map prediction type to key
+        prediction_type_map = {
+            'under_1_run_1st': 'under_1_run_first_inning',
+            'over_2.5_runs_first_3': 'over_2.5_runs_first_3_innings',
+            'over_3.5_runs_first_3': 'over_3.5_runs_first_3_innings'
+        }
+        
+        prediction_key = prediction_type_map.get(prediction_type)
+        
+        if not prediction_key:
+            return jsonify({'error': 'Invalid prediction type'}), 400
+        
+        # Get predictions
+        all_predictions = mlb_prediction_api.get_all_predictions(force_refresh, date_str)
+        
+        # Get predictions for the specified type
+        predictions = all_predictions.get(prediction_key, [])
+        
+        # Add metadata
+        result = {
+            'predictions': predictions,
+            'metadata': all_predictions.get('metadata', {})
+        }
+        
+        return jsonify(result)
     except Exception as e:
-        logger.error(f"Error refreshing data: {str(e)}", exc_info=True)
-        return jsonify({"status": "error", "message": str(e)}), 500
+        logger.error(f"Error getting predictions by type: {e}")
+        return jsonify({'error': str(e)}), 500
 
-@app.errorhandler(404)
-def page_not_found(e):
-    """Handle 404 errors"""
-    return render_template('index.html', error="Page not found"), 404
-
-@app.errorhandler(500)
-def server_error(e):
-    """Handle 500 errors"""
-    logger.error(f"Server error: {str(e)}", exc_info=True)
-    return render_template('index.html', error="Server error occurred"), 500
-
-def generate_sample_predictions(prediction_type):
-    """Generate sample predictions when real data is unavailable"""
-    logger.info(f"Generating sample predictions for {prediction_type}")
-    
-    # Sample teams and pitchers
-    games = [
-        {
-            "home_team": "Philadelphia Phillies",
-            "away_team": "San Francisco Giants",
-            "home_pitcher": "Aaron Nola",
-            "away_pitcher": "Logan Webb",
-            "home_era": "3.25",
-            "away_era": "3.25",
-            "stadium": "Citizens Bank Park",
-            "time": "7:05 PM"
-        },
-        {
-            "home_team": "New York Yankees",
-            "away_team": "Boston Red Sox",
-            "home_pitcher": "Gerrit Cole",
-            "away_pitcher": "Brayan Bello",
-            "home_era": "3.15",
-            "away_era": "4.24",
-            "stadium": "Yankee Stadium",
-            "time": "7:05 PM"
-        },
-        {
-            "home_team": "Los Angeles Dodgers",
-            "away_team": "San Diego Padres",
-            "home_pitcher": "Yoshinobu Yamamoto",
-            "away_pitcher": "Nick Pivetta",
-            "home_era": "3.15",
-            "away_era": "1.69",
-            "stadium": "Dodger Stadium",
-            "time": "10:10 PM"
-        },
-        {
-            "home_team": "Chicago Cubs",
-            "away_team": "Milwaukee Brewers",
-            "home_pitcher": "Matthew Boyd",
-            "away_pitcher": "Freddy Peralta",
-            "home_era": "2.14",
-            "away_era": "3.80",
-            "stadium": "Wrigley Field",
-            "time": "2:20 PM"
-        }
-    ]
-    
-    predictions = []
-    
-    for game in games:
-        # Generate probability based on prediction type
-        if prediction_type == 'under_1_run_1st':
-            probability = 62.5 if game["home_team"] == "Philadelphia Phillies" else 58.3
-            rating = "Bet" if probability > 60 else "Lean"
-        elif prediction_type == 'over_2.5_runs_3':
-            probability = 59.8 if game["home_team"] == "New York Yankees" else 55.2
-            rating = "Lean"
-        else:  # over_3.5_runs_3
-            probability = 54.3 if game["home_team"] == "Los Angeles Dodgers" else 51.8
-            rating = "Lean" if probability > 52 else "Pass"
+@app.route('/api/dates', methods=['GET'])
+def get_available_dates():
+    """
+    Get available dates for predictions
+    """
+    try:
+        # Generate dates (7 days before and after today)
+        today = datetime.now()
+        dates = []
         
-        # Create prediction object
-        prediction = {
-            'home_team': game['home_team'],
-            'away_team': game['away_team'],
-            'stadium': game['stadium'],
-            'time': game['time'],
-            'home_pitcher': game['home_pitcher'],
-            'away_pitcher': game['away_pitcher'],
-            'home_era': game['home_era'],
-            'away_era': game['away_era'],
-            'probability': probability,
-            'rating': rating,
-            'factors': [
-                {
-                    'name': 'Pitcher Performance',
-                    'weight': 25.0,
-                    'description': "Starting pitcher ERA and recent performance"
-                },
-                {
-                    'name': 'Bullpen Performance',
-                    'weight': 15.0,
-                    'description': "Relief pitcher effectiveness"
-                },
-                {
-                    'name': 'Batter vs. Pitcher Matchups',
-                    'weight': 15.0,
-                    'description': "Historical batter performance against specific pitchers"
-                }
-            ],
-            'data_source': "MLB Stats API (Official)"
-        }
+        for i in range(-7, 8):
+            date = today + timedelta(days=i)
+            date_str = date.strftime('%Y-%m-%d')
+            date_display = date.strftime('%A, %B %d, %Y')
+            
+            dates.append({
+                'date': date_str,
+                'display': date_display,
+                'is_today': i == 0
+            })
         
-        predictions.append(prediction)
-    
-    return predictions
+        return jsonify(dates)
+    except Exception as e:
+        logger.error(f"Error getting available dates: {e}")
+        return jsonify({'error': str(e)}), 500
 
-# Create cache directories in a location Render can write to
-cache_dir = os.path.join(os.environ.get('RENDER_CACHE_DIR', '/tmp'), 'mlb_prediction_tool')
-os.makedirs(os.path.join(cache_dir, 'mlb_stats'), exist_ok=True)
-os.makedirs(os.path.join(cache_dir, 'predictions'), exist_ok=True)
+@app.route('/api/refresh', methods=['POST'])
+def refresh_data():
+    """
+    Refresh all data
+    """
+    try:
+        # Force refresh
+        mlb_prediction_api.refresh_data_if_needed(True)
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        logger.error(f"Error refreshing data: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/status', methods=['GET'])
+def get_status():
+    """
+    Get API status
+    """
+    try:
+        # Get current time
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        # Get last refresh time
+        last_refresh_time = datetime.fromtimestamp(mlb_prediction_api.last_refresh_time).strftime('%Y-%m-%d %H:%M:%S') if mlb_prediction_api.last_refresh_time > 0 else 'Never'
+        
+        return jsonify({
+            'status': 'online',
+            'current_time': current_time,
+            'last_refresh_time': last_refresh_time,
+            'version': '1.0.0'
+        })
+    except Exception as e:
+        logger.error(f"Error getting status: {e}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    # Get port from environment variable or use default
-    port = int(os.environ.get('PORT', 8080))
+    # Create cache directories in a location Render can write to
+    cache_base = os.environ.get('RENDER_CACHE_DIR', '/tmp')
+    os.makedirs(os.path.join(cache_base, 'mlb_prediction_tool', 'mlb_stats'), exist_ok=True)
+    os.makedirs(os.path.join(cache_base, 'mlb_prediction_tool', 'predictions'), exist_ok=True)
     
     # Run the app
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
