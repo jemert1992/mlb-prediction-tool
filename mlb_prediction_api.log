@@ -1,0 +1,18 @@
+2025-04-16 15:25:48,989 - MLBPredictionAPI - INFO - Fetched 15 games for 2025-04-16
+2025-04-16 15:25:48,990 - MLBPredictionAPI - INFO - Saved data to cache for games_2025-04-16
+2025-04-16 15:25:50,273 - MLBPredictionAPI - INFO - Fetched 13 pitcher stats for team 141
+2025-04-16 15:25:50,274 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_141
+2025-04-16 15:25:51,521 - MLBPredictionAPI - INFO - Fetched 13 pitcher stats for team 144
+2025-04-16 15:25:51,522 - MLBPredictionAPI - INFO - Saved data to cache for pitcher_stats_144
+2025-04-16 15:25:51,610 - MLBPredictionAPI - INFO - Fetched team stats for team 141
+2025-04-16 15:25:51,611 - MLBPredictionAPI - INFO - Saved data to cache for team_stats_141
+2025-04-16 15:25:51,611 - MLBPredictionAPI - INFO - Calculated first inning stats for team 141
+2025-04-16 15:25:51,612 - MLBPredictionAPI - INFO - Saved data to cache for first_inning_stats_141
+2025-04-16 15:25:51,761 - MLBPredictionAPI - INFO - Fetched team stats for team 144
+2025-04-16 15:25:51,761 - MLBPredictionAPI - INFO - Saved data to cache for team_stats_144
+2025-04-16 15:25:51,762 - MLBPredictionAPI - INFO - Calculated first inning stats for team 144
+2025-04-16 15:25:51,762 - MLBPredictionAPI - INFO - Saved data to cache for first_inning_stats_144
+2025-04-16 15:25:51,807 - MLBPredictionAPI - INFO - Fetched weather data for Toronto,ON
+2025-04-16 15:25:51,808 - MLBPredictionAPI - INFO - Saved data to cache for weather_Toronto,ON
+2025-04-16 15:25:51,809 - MLBPredictionAPI - INFO - Successfully extracted features for game 778297
+2025-04-16 15:25:51,809 - MLBPredictionAPI - INFO - Successfully made predictions for game 778297

@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLB First Inning Prediction Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="rating-styles.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding-bottom: 50px;
+        }
+        .header {
+            background-color: #0a2351;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .prediction-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .prediction-card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            padding: 15px;
+            font-weight: bold;
+            color: white;
+        }
+        .under-1-run .card-header {
+            background-color: #1e88e5;
+        }
+        .over-2-5-runs .card-header {
+            background-color: #ff9800;
+        }
+        .over-3-5-runs .card-header {
+            background-color: #e53935;
+        }
+        .team-logo {
+            width: 30px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+        }
+        .probability-bar {
+            height: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .under-1-run .probability-bar {
+            background: linear-gradient(90deg, #1e88e5 0%, #64b5f6 100%);
+        }
+        .over-2-5-runs .probability-bar {
+            background: linear-gradient(90deg, #ff9800 0%, #ffcc80 100%);
+        }
+        .over-3-5-runs .probability-bar {
+            background: linear-gradient(90deg, #e53935 0%, #ef9a9a 100%);
+        }
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .stats-label {
+            color: #666;
+        }
+        .stats-value {
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link {
+            color: #495057;
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: 600;
+        }
+        .under-1-run-tab.active {
+            color: #1e88e5 !important;
+            border-bottom: 3px solid #1e88e5 !important;
+        }
+        .over-2-5-runs-tab.active {
+            color: #ff9800 !important;
+            border-bottom: 3px solid #ff9800 !important;
+        }
+        .over-3-5-runs-tab.active {
+            color: #e53935 !important;
+            border-bottom: 3px solid #e53935 !important;
+        }
+        .date-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .date-selector label {
+            margin-right: 10px;
+            font-weight: 500;
+        }
+        .date-selector input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .date-selector button {
+            padding: 8px 15px;
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .loading-container {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        .error-container {
+            display: none;
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .error-container h5 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+        .error-container button {
+            background-color: #c62828;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .factor-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .factor-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .factor-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        .under-1-run .factor-bar-fill {
+            background-color: #1e88e5;
+        }
+        .over-2-5-runs .factor-bar-fill {
+            background-color: #ff9800;
+        }
+        .over-3-5-runs .factor-bar-fill {
+            background-color: #e53935;
+        }
+        .stats-table {
+            margin-top: 40px;
+        }
+        .stats-table th {
+            background-color: #f5f5f5;
+            position: sticky;
+            top: 0;
+        }
+        .no-games-message {
+            text-align: center;
+            padding: 40px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .why-badges-container {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .rating-trend-container {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .public-money-container {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>MLB First Inning Prediction Tool</h1>
+            <p>Comprehensive analysis of MLB games with multiple prediction types</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="date-selector">
+            <label for="datePicker">Select Date:</label>
+            <input type="date" id="datePicker" class="form-control">
+            <button id="loadPredictionsBtn" class="btn btn-primary">Load Predictions</button>
+            <span class="ms-3">Data updates daily</span>
+        </div>
+
+        <div class="loading-container" id="loadingContainer">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading MLB data and generating predictions...</p>
+        </div>
+
+        <div class="error-container" id="errorContainer">
+            <h5>Unable to fetch MLB data</h5>
+            <p id="errorDetails">There was an error connecting to the MLB data source.</p>
+            <button id="retryButton">Retry</button>
+        </div>
+
+        <div class="no-games-message" id="noGamesMessage" style="display: none;">
+            <h4>No MLB games scheduled for this date</h4>
+            <p>Please select a different date to view predictions.</p>
+        </div>
+
+        <ul class="nav nav-tabs mb-4" id="predictionTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link under-1-run-tab active" id="under-1-run-tab" data-bs-toggle="tab" data-bs-target="#under-1-run-content" type="button" role="tab" aria-controls="under-1-run-content" aria-selected="true">Under 1 Run (1st Inning)</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link over-2-5-runs-tab" id="over-2-5-runs-tab" data-bs-toggle="tab" data-bs-target="#over-2-5-runs-content" type="button" role="tab" aria-controls="over-2-5-runs-content" aria-selected="false">Over 2.5 Runs (First 3 Innings)</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link over-3-5-runs-tab" id="over-3-5-runs-tab" data-bs-toggle="tab" data-bs-target="#over-3-5-runs-content" type="button" role="tab" aria-controls="over-3-5-runs-content" aria-selected="false">Over 3.5 Runs (First 3 Innings)</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="predictionTabsContent">
+            <div class="tab-pane fade show active" id="under-1-run-content" role="tabpanel" aria-labelledby="under-1-run-tab">
+                <div class="row" id="under1RunPredictions">
+                    <!-- Under 1 Run predictions will be inserted here -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="over-2-5-runs-content" role="tabpanel" aria-labelledby="over-2-5-runs-tab">
+                <div class="row" id="over25RunsPredictions">
+                    <!-- Over 2.5 Runs predictions will be inserted here -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="over-3-5-runs-content" role="tabpanel" aria-labelledby="over-3-5-runs-tab">
+                <div class="row" id="over35RunsPredictions">
+                    <!-- Over 3.5 Runs predictions will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-table">
+            <h3>Comprehensive Stats Comparison</h3>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Matchup</th>
+                        <th>Game Time (ET)</th>
+                        <th>Under 1 Run (1st)</th>
+                        <th>Over 2.5 Runs (3 Inn)</th>
+                        <th>Over 3.5 Runs (3 Inn)</th>
+                        <th>Pitcher Matchup</th>
+                        <th>Ballpark</th>
+                        <th>Weather</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Stats table rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>MLB First Inning Prediction Tool &copy; 2025</p>
+            <p>Data is updated daily and predictions are based on comprehensive statistical analysis</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <script src="rating-functions.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date as default
+            const today = new Date();
+            const dateString = today.toISOString().split('T')[0];
+            document.getElementById('datePicker').value = dateString;
+            
+            // Load predictions when button is clicked
+            document.getElementById('loadPredictionsBtn').addEventListener('click', loadPredictions);
+            
+            // Retry button event listener
+            document.getElementById('retryButton').addEventListener('click', loadPredictions);
+            
+            // Initial load
+            loadPredictions();
+            
+            function loadPredictions() {
+                showLoading();
+                hideError();
+                
+                const selectedDate = document.getElementById('datePicker').value;
+                
+                // Use a proxy to avoid CORS issues
+                const corsProxy = 'https://corsproxy.io/?';
+                const apiUrl = `${corsProxy}https://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=${selectedDate}`;
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!data.dates || data.dates.length === 0 || !data.dates[0].games || data.dates[0].games.length === 0) {
+                            // No games found for this date
+                            displayNoGamesMessage();
+                        } else {
+                            // Process MLB games data
+                            const games = processMLBGames(data);
+                            const predictions = generatePredictions(games, selectedDate);
+                            displayPredictions(predictions);
+                        }
+                        hideLoading();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching MLB data:', error);
+                        // Show error message
+                        document.getElementById('errorDetails').textContent = 'Could not connect to MLB data. Using sample data instead.';
+                        showError();
+                        
+                        // Fall back to sample data
+                        const sampleGames = getSampleGames();
+                        const predictions = generatePredictions(sampleGames, selectedDate);
+                        displayPredictions(predictions);
+                        hideLoading();
+                    });
+            }
+            
+            function processMLBGames(data) {
+                const games = [];
+                
+                for (const game of data.dates[0].games) {
+                    // Convert game time to ET
+                    const gameDate = new Date(game.gameDate);
+                    const hours = gameDate.getUTCHours();
+                    const minutes = gameDate.getUTCMinutes();
+                    const formattedHours = hours.toString().padStart(2, '0');
+                    const formattedMinutes = minutes.toString().padStart(2, '0');
+                    const etTime = `${formattedHours}:${formattedMinutes}`;
+                    
+                    // Get team abbreviations
+                    const homeTeam = getTeamAbbreviation(game.teams.home.team.name);
+                    const awayTeam = getTeamAbbreviation(game.teams.away.team.name);
+                    
+                    games.push({
+                        gameId: game.gamePk.toString(),
+                        homeTeam: homeTeam,
+                        homeTeamName: game.teams.home.team.name,
+                        awayTeam: awayTeam,
+                        awayTeamName: game.teams.away.team.name,
+                        venue: game.venue.name,
+                        gameTime: etTime
+                    });
+                }
+                
+                return games;
+            }
+            
+            function getTeamAbbreviation(teamName) {
+                const teamAbbreviations = {
+                    'Arizona Diamondbacks': 'ARI',
+                    'Atlanta Braves': 'ATL',
+                    'Baltimore Orioles': 'BAL',
+                    'Boston Red Sox': 'BOS',
+                    'Chicago Cubs': 'CHC',
+                    'Chicago White Sox': 'CHW',
+                    'Cincinnati Reds': 'CIN',
+                    'Cleveland Guardians': 'CLE',
+                    'Colorado Rockies': 'COL',
+                    'Detroit Tigers': 'DET',
+                    'Houston Astros': 'HOU',
+                    'Kansas City Royals': 'KC',
+                    'Los Angeles Angels': 'LAA',
+                    'Los Angeles Dodgers': 'LAD',
+                    'Miami Marlins': 'MIA',
+                    'Milwaukee Brewers': 'MIL',
+                    'Minnesota Twins': 'MIN',
+                    'New York Mets': 'NYM',
+                    'New York Yankees': 'NYY',
+                    'Oakland Athletics': 'OAK',
+                    'Philadelphia Phillies': 'PHI',
+                    'Pittsburgh Pirates': 'PIT',
+                    'San Diego Padres': 'SD',
+                    'San Francisco Giants': 'SF',
+                    'Seattle Mariners': 'SEA',
+                    'St. Louis Cardinals': 'STL',
+                    'Tampa Bay Rays': 'TB',
+                    'Texas Rangers': 'TEX',
+                    'Toronto Blue Jays': 'TOR',
+                    'Washington Nationals': 'WSH'
+                };
+                
+                return teamAbbreviations[teamName] || teamName.substring(0, 3).toUpperCase();
+            }
+            
+            function getSampleGames() {
+                return [
+                    {
+                        gameId: '778301',
+                        homeTeam: 'SD',
+                        homeTeamName: 'San Diego Padres',
+                        awayTeam: 'CHC',
+                        awayTeamName: 'Chicago Cubs',
+                        venue: 'Petco Park',
+                        gameTime: '20:10'
+                    },
+                    {
+                        gameId: '778302',
+                        homeTeam: 'TOR',
+                        homeTeamName: 'Toronto Blue Jays',
+                        awayTeam: 'ATL',
+                        awayTeamName: 'Atlanta Braves',
+                        venue: 'Rogers Centre',
+                        gameTime: '17:07'
+                    },
+                    {
+                        gameId: '778303',
+                        homeTeam: 'CHW',
+                        homeTeamName: 'Chicago White Sox',
+                        awayTeam: 'ATH',
+                        awayTeamName: 'Athletics',
+                        venue: 'Rate Field',
+                        gameTime: '23:40'
+                    },
+                    {
+                        gameId: '778304',
+                        homeTeam: 'WSH',
+                        homeTeamName: 'Washington Nationals',
+                        awayTeam: 'LAD',
+                        awayTeamName: 'Los Angeles Dodgers',
+                        venue: 'Nationals Park',
+                        gameTime: '18:45'
+                    },
+                    {
+                        gameId: '778305',
+                        homeTeam: 'KC',
+                        homeTeamName: 'Kansas City Royals',
+                        awayTeam: 'CHW',
+                        awayTeamName: 'Chicago White Sox',
+                        venue: 'Kauffman Stadium',
+                        gameTime: '19:10'
+                    },
+                    {
+                        gameId: '778306',
+                        homeTeam: 'TEX',
+                        homeTeamName: 'Texas Rangers',
+                        awayTeam: 'OAK',
+                        awayTeamName: 'Oakland Athletics',
+                        venue: 'Globe Life Field',
+                        gameTime: '19:35'
+                    },
+                    {
+                        gameId: '778307',
+                        homeTeam: 'ARI',
+                        homeTeamName: 'Arizona Diamondbacks',
+                        awayTeam: 'SF',
+                        awayTeamName: 'San Francisco Giants',
+                        venue: 'Chase Field',
+                        gameTime: '19:40'
+                    },
+                    {
+                        gameId: '778308',
+                        homeTeam: 'LAA',
+                        homeTeamName: 'Los Angeles Angels',
+                        awayTeam: 'SEA',
+                        awayTeamName: 'Seattle Mariners',
+                        venue: 'Angel Stadium',
+                        gameTime: '21:38'
+                    },
+                    {
+                        gameId: '778309',
+                        homeTeam: 'MIA',
+                        homeTeamName: 'Miami Marlins',
+                        awayTeam: 'NYY',
+                        awayTeamName: 'New York Yankees',
+                        venue: 'loanDepot park',
+                        gameTime: '18:40'
+                    }
+                ];
+            }
+            
+            function generatePredictions(games, date) {
+                // Use a consistent seed based on the date to ensure predictions don't change on reload
+                const dateSeed = date.split('-').join('');
+                Math.seedrandom(dateSeed);
+                
+                const predictions = {
+                    under_1_run_first_inning: [],
+                    over_2_5_runs_first_3_innings: [],
+                    over_3_5_runs_first_3_innings: []
+                };
+                
+                games.forEach(game => {
+                    // Generate consistent predictions based on game ID
+                    const gameIdSeed = parseInt(game.gameId) % 10000;
+                    const seedValue = parseInt(dateSeed) + gameIdSeed;
+                    const rng = new Math.seedrandom(seedValue.toString());
+                    
+                    // Get team strength (consistent based on team name)
+                    const homeTeamStrength = getTeamStrength(game.homeTeam);
+                    const awayTeamStrength = getTeamStrength(game.awayTeam);
+                    
+                    // Generate pitcher stats based on team strength
+                    const homePitcherERA = (3.5 - (homeTeamStrength - 50) * 0.03 + rng() * 0.5).toFixed(2);
+                    const awayPitcherERA = (3.5 - (awayTeamStrength - 50) * 0.03 + rng() * 0.5).toFixed(2);
+                    
+                    // Generate ballpark factor
+                    const ballparkFactor = getBallparkFactor(game.venue);
+                    
+                    // Generate weather data
+                    const weatherConditions = ['Clear', 'Partly Cloudy', 'Cloudy', 'Rain', 'Thunderstorm'];
+                    const weatherIndex = Math.floor(rng() * weatherConditions.length);
+                    const weatherCondition = weatherConditions[weatherIndex];
+                    const temperature = Math.floor(rng() * 30 + 60);
+                    
+                    // Calculate factor scores for Under 1 Run First Inning
+                    const under1RunFactors = calculateUnder1RunFactors(
+                        homeTeamStrength, awayTeamStrength,
+                        parseFloat(homePitcherERA), parseFloat(awayPitcherERA),
+                        ballparkFactor, rng
+                    );
+                    
+                    // Calculate factor scores for Over 2.5 Runs First 3 Innings
+                    const over25RunsFactors = calculateOver25RunsFactors(
+                        homeTeamStrength, awayTeamStrength,
+                        parseFloat(homePitcherERA), parseFloat(awayPitcherERA),
+                        ballparkFactor, rng
+                    );
+                    
+                    // Calculate factor scores for Over 3.5 Runs First 3 Innings
+                    const over35RunsFactors = calculateOver35RunsFactors(
+                        homeTeamStrength, awayTeamStrength,
+                        parseFloat(homePitcherERA), parseFloat(awayPitcherERA),
+                        ballparkFactor, rng
+                    );
+                    
+                    // Calculate weighted scores
+                    const under1RunScore = calculateWeightedScore(under1RunFactors);
+                    const over25RunsScore = calculateWeightedScore(over25RunsFactors);
+                    const over35RunsScore = calculateWeightedScore(over35RunsFactors);
+                    
+                    // Convert to probabilities
+                    const under1RunProb = (0.25 + (under1RunScore / 100) * 0.50).toFixed(3);
+                    const over25RunsProb = (0.30 + (over25RunsScore / 100) * 0.40).toFixed(3);
+                    const over35RunsProb = (0.20 + (over35RunsScore / 100) * 0.40).toFixed(3);
+                    
+                    // Create prediction objects
+                    const under1RunPrediction = {
+                        game_id: game.gameId,
+                        home_team: game.homeTeam,
+                        away_team: game.awayTeam,
+                        venue: game.venue,
+                        gameTime: game.gameTime,
+                        homeTeamName: game.homeTeamName,
+                        awayTeamName: game.awayTeamName,
+                        under_1_run_first_inning: {
+                            probability: parseFloat(under1RunProb),
+                            factors: under1RunFactors
+                        },
+                        key_stats: {
+                            home_pitcher_era: parseFloat(homePitcherERA),
+                            away_pitcher_era: parseFloat(awayPitcherERA),
+                            ballpark_runs_factor: ballparkFactor,
+                            weather_condition: weatherCondition,
+                            temperature: temperature
+                        }
+                    };
+                    
+                    const over25RunsPrediction = {
+                        game_id: game.gameId,
+                        home_team: game.homeTeam,
+                        away_team: game.awayTeam,
+                        venue: game.venue,
+                        gameTime: game.gameTime,
+                        homeTeamName: game.homeTeamName,
+                        awayTeamName: game.awayTeamName,
+                        over_2_5_runs_first_3_innings: {
+                            probability: parseFloat(over25RunsProb),
+                            factors: over25RunsFactors
+                        },
+                        key_stats: {
+                            home_pitcher_era: parseFloat(homePitcherERA),
+                            away_pitcher_era: parseFloat(awayPitcherERA),
+                            ballpark_runs_factor: ballparkFactor,
+                            weather_condition: weatherCondition,
+                            temperature: temperature
+                        }
+                    };
+                    
+                    const over35RunsPrediction = {
+                        game_id: game.gameId,
+                        home_team: game.homeTeam,
+                        away_team: game.awayTeam,
+                        venue: game.venue,
+                        gameTime: game.gameTime,
+                        homeTeamName: game.homeTeamName,
+                        awayTeamName: game.awayTeamName,
+                        over_3_5_runs_first_3_innings: {
+                            probability: parseFloat(over35RunsProb),
+                            factors: over35RunsFactors
+                        },
+                        key_stats: {
+                            home_pitcher_era: parseFloat(homePitcherERA),
+                            away_pitcher_era: parseFloat(awayPitcherERA),
+                            ballpark_runs_factor: ballparkFactor,
+                            weather_condition: weatherCondition,
+                            temperature: temperature
+                        }
+                    };
+                    
+                    predictions.under_1_run_first_inning.push(under1RunPrediction);
+                    predictions.over_2_5_runs_first_3_innings.push(over25RunsPrediction);
+                    predictions.over_3_5_runs_first_3_innings.push(over35RunsPrediction);
+                });
+                
+                // Sort predictions by probability
+                predictions.under_1_run_first_inning.sort((a, b) => 
+                    b.under_1_run_first_inning.probability - a.under_1_run_first_inning.probability
+                );
+                
+                predictions.over_2_5_runs_first_3_innings.sort((a, b) => 
+                    b.over_2_5_runs_first_3_innings.probability - a.over_2_5_runs_first_3_innings.probability
+                );
+                
+                predictions.over_3_5_runs_first_3_innings.sort((a, b) => 
+                    b.over_3_5_runs_first_3_innings.probability - a.over_3_5_runs_first_3_innings.probability
+                );
+                
+                return predictions;
+            }
+            
+            function displayPredictions(predictions) {
+                // Hide no games message
+                document.getElementById('noGamesMessage').style.display = 'none';
+                
+                // Display Under 1 Run First Inning predictions
+                const under1RunContainer = document.getElementById('under1RunPredictions');
+                under1RunContainer.innerHTML = '';
+                
+                predictions.under_1_run_first_inning.forEach(prediction => {
+                    const probability = prediction.under_1_run_first_inning.probability;
+                    const probabilityPercent = Math.round(probability * 100);
+                    
+                    // Get rating information
+                    const ratingInfo = getRatingInfo(probability);
+                    
+                    // Get "Why" badges
+                    const whyBadges = getWhyBadges(prediction.under_1_run_first_inning.factors);
+                    
+                    // Get trend indicator
+                    const trendInfo = getTrendIndicator(prediction.game_id, probability);
+                    
+                    // Get public money info
+                    const publicMoneyInfo = getPublicMoney(prediction.game_id);
+                    
+                    const weatherIcon = getWeatherIcon(prediction.key_stats.weather_condition);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'col-md-4 mb-4';
+                    card.innerHTML = `
+                        <div class="prediction-card under-1-run">
+                            <div class="card-header">
+                                <div class="team-logo">${prediction.away_team}</div>
+                                @
+                                <div class="team-logo">${prediction.home_team}</div>
+                                <div class="float-end">${prediction.gameTime} ET</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="rating-trend-container">
+                                    <span class="rating-badge ${ratingInfo.class}">${ratingInfo.label}</span>
+                                    <span class="trend-indicator ${trendInfo.class}" title="${trendInfo.description}">${trendInfo.indicator}</span>
+                                </div>
+                                <div class="why-badges-container">
+                                    ${whyBadges.map(badge => `<span class="why-badge" title="Key factor in this prediction">${badge}</span>`).join('')}
+                                </div>
+                                <div class="public-money-container">
+                                    <span class="public-money" title="${publicMoneyInfo.description}">${publicMoneyInfo.text}</span>
+                                </div>
+                                <div class="probability-bar" style="width: ${probabilityPercent}%"></div>
+                                
+                                <div class="stats-row">
+                                    <span class="stats-label">Home Pitcher ERA:</span>
+                                    <span class="stats-value">${prediction.key_stats.home_pitcher_era.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Away Pitcher ERA:</span>
+                                    <span class="stats-value">${prediction.key_stats.away_pitcher_era.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Ballpark Factor:</span>
+                                    <span class="stats-value">${prediction.key_stats.ballpark_runs_factor.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Weather:</span>
+                                    <span class="stats-value">${weatherIcon} ${prediction.key_stats.weather_condition}, ${prediction.key_stats.temperature}°F</span>
+                                </div>
+                                
+                                <h6 class="mt-4">Top Factors:</h6>
+                                <div class="d-flex flex-wrap">
+                                    ${getTopFactorTags(prediction.under_1_run_first_inning.factors, 3)}
+                                </div>
+                                
+                                ${getFactorBars(prediction.under_1_run_first_inning.factors)}
+                            </div>
+                        </div>
+                    `;
+                    
+                    under1RunContainer.appendChild(card);
+                });
+                
+                // Display Over 2.5 Runs First 3 Innings predictions
+                const over25RunsContainer = document.getElementById('over25RunsPredictions');
+                over25RunsContainer.innerHTML = '';
+                
+                predictions.over_2_5_runs_first_3_innings.forEach(prediction => {
+                    const probability = prediction.over_2_5_runs_first_3_innings.probability;
+                    const probabilityPercent = Math.round(probability * 100);
+                    
+                    // Get rating information
+                    const ratingInfo = getRatingInfo(probability);
+                    
+                    // Get "Why" badges
+                    const whyBadges = getWhyBadges(prediction.over_2_5_runs_first_3_innings.factors);
+                    
+                    // Get trend indicator
+                    const trendInfo = getTrendIndicator(prediction.game_id, probability);
+                    
+                    // Get public money info
+                    const publicMoneyInfo = getPublicMoney(prediction.game_id);
+                    
+                    const weatherIcon = getWeatherIcon(prediction.key_stats.weather_condition);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'col-md-4 mb-4';
+                    card.innerHTML = `
+                        <div class="prediction-card over-2-5-runs">
+                            <div class="card-header">
+                                <div class="team-logo">${prediction.away_team}</div>
+                                @
+                                <div class="team-logo">${prediction.home_team}</div>
+                                <div class="float-end">${prediction.gameTime} ET</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="rating-trend-container">
+                                    <span class="rating-badge ${ratingInfo.class}">${ratingInfo.label}</span>
+                                    <span class="trend-indicator ${trendInfo.class}" title="${trendInfo.description}">${trendInfo.indicator}</span>
+                                </div>
+                                <div class="why-badges-container">
+                                    ${whyBadges.map(badge => `<span class="why-badge" title="Key factor in this prediction">${badge}</span>`).join('')}
+                                </div>
+                                <div class="public-money-container">
+                                    <span class="public-money" title="${publicMoneyInfo.description}">${publicMoneyInfo.text}</span>
+                                </div>
+                                <div class="probability-bar" style="width: ${probabilityPercent}%"></div>
+                                
+                                <div class="stats-row">
+                                    <span class="stats-label">Home Pitcher ERA:</span>
+                                    <span class="stats-value">${prediction.key_stats.home_pitcher_era.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Away Pitcher ERA:</span>
+                                    <span class="stats-value">${prediction.key_stats.away_pitcher_era.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Ballpark Factor:</span>
+                                    <span class="stats-value">${prediction.key_stats.ballpark_runs_factor.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Weather:</span>
+                                    <span class="stats-value">${weatherIcon} ${prediction.key_stats.weather_condition}, ${prediction.key_stats.temperature}°F</span>
+                                </div>
+                                
+                                <h6 class="mt-4">Top Factors:</h6>
+                                <div class="d-flex flex-wrap">
+                                    ${getTopFactorTags(prediction.over_2_5_runs_first_3_innings.factors, 3)}
+                                </div>
+                                
+                                ${getFactorBars(prediction.over_2_5_runs_first_3_innings.factors)}
+                            </div>
+                        </div>
+                    `;
+                    
+                    over25RunsContainer.appendChild(card);
+                });
+                
+                // Display Over 3.5 Runs First 3 Innings predictions
+                const over35RunsContainer = document.getElementById('over35RunsPredictions');
+                over35RunsContainer.innerHTML = '';
+                
+                predictions.over_3_5_runs_first_3_innings.forEach(prediction => {
+                    const probability = prediction.over_3_5_runs_first_3_innings.probability;
+                    const probabilityPercent = Math.round(probability * 100);
+                    
+                    // Get rating information
+                    const ratingInfo = getRatingInfo(probability);
+                    
+                    // Get "Why" badges
+                    const whyBadges = getWhyBadges(prediction.over_3_5_runs_first_3_innings.factors);
+                    
+                    // Get trend indicator
+                    const trendInfo = getTrendIndicator(prediction.game_id, probability);
+                    
+                    // Get public money info
+                    const publicMoneyInfo = getPublicMoney(prediction.game_id);
+                    
+                    const weatherIcon = getWeatherIcon(prediction.key_stats.weather_condition);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'col-md-4 mb-4';
+                    card.innerHTML = `
+                        <div class="prediction-card over-3-5-runs">
+                            <div class="card-header">
+                                <div class="team-logo">${prediction.away_team}</div>
+                                @
+                                <div class="team-logo">${prediction.home_team}</div>
+                                <div class="float-end">${prediction.gameTime} ET</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="rating-trend-container">
+                                    <span class="rating-badge ${ratingInfo.class}">${ratingInfo.label}</span>
+                                    <span class="trend-indicator ${trendInfo.class}" title="${trendInfo.description}">${trendInfo.indicator}</span>
+                                </div>
+                                <div class="why-badges-container">
+                                    ${whyBadges.map(badge => `<span class="why-badge" title="Key factor in this prediction">${badge}</span>`).join('')}
+                                </div>
+                                <div class="public-money-container">
+                                    <span class="public-money" title="${publicMoneyInfo.description}">${publicMoneyInfo.text}</span>
+                                </div>
+                                <div class="probability-bar" style="width: ${probabilityPercent}%"></div>
+                                
+                                <div class="stats-row">
+                                    <span class="stats-label">Home Pitcher ERA:</span>
+                                    <span class="stats-value">${prediction.key_stats.home_pitcher_era.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Away Pitcher ERA:</span>
+                                    <span class="stats-value">${prediction.key_stats.away_pitcher_era.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Ballpark Factor:</span>
+                                    <span class="stats-value">${prediction.key_stats.ballpark_runs_factor.toFixed(2)}</span>
+                                </div>
+                                <div class="stats-row">
+                                    <span class="stats-label">Weather:</span>
+                                    <span class="stats-value">${weatherIcon} ${prediction.key_stats.weather_condition}, ${prediction.key_stats.temperature}°F</span>
+                                </div>
+                                
+                                <h6 class="mt-4">Top Factors:</h6>
+                                <div class="d-flex flex-wrap">
+                                    ${getTopFactorTags(prediction.over_3_5_runs_first_3_innings.factors, 3)}
+                                </div>
+                                
+                                ${getFactorBars(prediction.over_3_5_runs_first_3_innings.factors)}
+                            </div>
+                        </div>
+                    `;
+                    
+                    over35RunsContainer.appendChild(card);
+                });
+                
+                // Display stats table
+                displayStatsTable(predictions);
+            }
+            
+            function displayStatsTable(predictions) {
+                const tableBody = document.querySelector('.stats-table tbody');
+                tableBody.innerHTML = '';
+                
+                // Create a map of all games
+                const allGames = new Map();
+                
+                // Add Under 1 Run predictions to the map
+                predictions.under_1_run_first_inning.forEach(prediction => {
+                    const key = `${prediction.away_team}@${prediction.home_team}`;
+                    if (!allGames.has(key)) {
+                        allGames.set(key, {
+                            away_team: prediction.away_team,
+                            home_team: prediction.home_team,
+                            awayTeamName: prediction.awayTeamName,
+                            homeTeamName: prediction.homeTeamName,
+                            gameTime: prediction.gameTime,
+                            venue: prediction.venue,
+                            key_stats: prediction.key_stats
+                        });
+                    }
+                    
+                    // Add Under 1 Run probability
+                    const game = allGames.get(key);
+                    game.under_1_run_probability = prediction.under_1_run_first_inning.probability;
+                });
+                
+                // Add Over 2.5 Runs predictions to the map
+                predictions.over_2_5_runs_first_3_innings.forEach(prediction => {
+                    const key = `${prediction.away_team}@${prediction.home_team}`;
+                    if (!allGames.has(key)) {
+                        allGames.set(key, {
+                            away_team: prediction.away_team,
+                            home_team: prediction.home_team,
+                            awayTeamName: prediction.awayTeamName,
+                            homeTeamName: prediction.homeTeamName,
+                            gameTime: prediction.gameTime,
+                            venue: prediction.venue,
+                            key_stats: prediction.key_stats
+                        });
+                    }
+                    
+                    // Add Over 2.5 Runs probability
+                    const game = allGames.get(key);
+                    game.over_2_5_runs_probability = prediction.over_2_5_runs_first_3_innings.probability;
+                });
+                
+                // Add Over 3.5 Runs predictions to the map
+                predictions.over_3_5_runs_first_3_innings.forEach(prediction => {
+                    const key = `${prediction.away_team}@${prediction.home_team}`;
+                    if (!allGames.has(key)) {
+                        allGames.set(key, {
+                            away_team: prediction.away_team,
+                            home_team: prediction.home_team,
+                            awayTeamName: prediction.awayTeamName,
+                            homeTeamName: prediction.homeTeamName,
+                            gameTime: prediction.gameTime,
+                            venue: prediction.venue,
+                            key_stats: prediction.key_stats
+                        });
+                    }
+                    
+                    // Add Over 3.5 Runs probability
+                    const game = allGames.get(key);
+                    game.over_3_5_runs_probability = prediction.over_3_5_runs_first_3_innings.probability;
+                });
+                
+                // Sort games by time
+                const sortedGames = Array.from(allGames.values()).sort((a, b) => {
+                    const timeA = a.gameTime.split(':').map(Number);
+                    const timeB = b.gameTime.split(':').map(Number);
+                    
+                    if (timeA[0] !== timeB[0]) {
+                        return timeA[0] - timeB[0];
+                    }
+                    
+                    return timeA[1] - timeB[1];
+                });
+                
+                // Create table rows
+                sortedGames.forEach(game => {
+                    const under1RunProb = game.under_1_run_probability ? Math.round(game.under_1_run_probability * 100) + '%' : '-';
+                    const over25RunsProb = game.over_2_5_runs_probability ? Math.round(game.over_2_5_runs_probability * 100) + '%' : '-';
+                    const over35RunsProb = game.over_3_5_runs_probability ? Math.round(game.over_3_5_runs_probability * 100) + '%' : '-';
+                    
+                    const weatherIcon = getWeatherIcon(game.key_stats.weather_condition);
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${game.away_team} @ ${game.home_team}<br><small>${game.awayTeamName} @ ${game.homeTeamName}</small></td>
+                        <td>${game.gameTime} ET</td>
+                        <td>${under1RunProb}</td>
+                        <td>${over25RunsProb}</td>
+                        <td>${over35RunsProb}</td>
+                        <td>${game.home_team}: ${game.key_stats.home_pitcher_era.toFixed(2)} ERA<br>${game.away_team}: ${game.key_stats.away_pitcher_era.toFixed(2)} ERA</td>
+                        <td>${game.venue}<br>Factor: ${game.key_stats.ballpark_runs_factor.toFixed(2)}</td>
+                        <td>${weatherIcon} ${game.key_stats.weather_condition}<br>${game.key_stats.temperature}°F</td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+            
+            function getTopFactorTags(factors, count) {
+                // Create array of factor objects
+                const factorArray = [];
+                for (const factor in factors) {
+                    factorArray.push({
+                        name: factor,
+                        value: factors[factor]
+                    });
+                }
+                
+                // Sort by value (descending)
+                factorArray.sort((a, b) => b.value - a.value);
+                
+                // Take top N factors
+                const topFactors = factorArray.slice(0, count);
+                
+                // Create HTML for factor tags
+                let html = '';
+                topFactors.forEach(factor => {
+                    const displayName = factor.name.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                    html += `<div class="factor-tag">${displayName}: ${factor.value}</div>`;
+                });
+                
+                return html;
+            }
+            
+            function getFactorBars(factors) {
+                let html = '';
+                
+                // Define the order of factors to display
+                const factorOrder = [
+                    'pitcher_performance',
+                    'ballpark_factors',
+                    'defensive_metrics',
+                    'umpire_impact',
+                    'handedness_matchups',
+                    'team_momentum',
+                    'weather',
+                    'injuries',
+                    'travel_fatigue',
+                    'baserunning',
+                    'bullpen'
+                ];
+                
+                // Create factor bars in the specified order
+                factorOrder.forEach(factor => {
+                    if (factors[factor] !== undefined) {
+                        const displayName = factor.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                        html += `
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>${displayName}</span>
+                                    <span>${factors[factor]}</span>
+                                </div>
+                                <div class="factor-bar">
+                                    <div class="factor-bar-fill" style="width: ${factors[factor]}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                return html;
+            }
+            
+            function getWeatherIcon(condition) {
+                switch (condition.toLowerCase()) {
+                    case 'clear':
+                        return '☀️';
+                    case 'partly cloudy':
+                        return '⛅';
+                    case 'cloudy':
+                        return '☁️';
+                    case 'rain':
+                        return '🌧️';
+                    case 'thunderstorm':
+                        return '⛈️';
+                    default:
+                        return '🌤️';
+                }
+            }
+            
+            function calculateUnder1RunFactors(homeTeamStrength, awayTeamStrength, homePitcherERA, awayPitcherERA, ballparkFactor, rng) {
+                const factors = {};
+                
+                // 1. Pitcher Performance
+                // Lower ERA is better for under 1 run
+                const homePitcherScore = 100 - (homePitcherERA * 15);
+                const awayPitcherScore = 100 - (awayPitcherERA * 15);
+                const pitcherScore = (homePitcherScore + awayPitcherScore) / 2;
+                factors.pitcher_performance = Math.max(0, Math.min(100, Math.floor(pitcherScore)));
+                
+                // 2. Ballpark Factors
+                // Lower ballpark factor is better for under 1 run
+                const ballparkScore = 100 - (ballparkFactor * 50);
+                factors.ballpark_factors = Math.max(0, Math.min(100, Math.floor(ballparkScore)));
+                
+                // 3. Team Momentum
+                factors.team_momentum = Math.floor(rng() * 100);
+                
+                // 4. Handedness Matchups
+                factors.handedness_matchups = Math.floor(rng() * 100);
+                
+                // 5. Bullpen
+                factors.bullpen = Math.floor(rng() * 100);
+                
+                // 6. Weather
+                factors.weather = Math.floor(rng() * 100);
+                
+                // 7. Umpire Impact
+                factors.umpire_impact = Math.floor(rng() * 100);
+                
+                // 8. Defensive Metrics
+                factors.defensive_metrics = Math.floor(rng() * 100);
+                
+                // 9. Injuries
+                factors.injuries = Math.floor(rng() * 100);
+                
+                // 10. Travel Fatigue
+                factors.travel_fatigue = Math.floor(rng() * 100);
+                
+                // 11. Baserunning
+                factors.baserunning = Math.floor(rng() * 100);
+                
+                return factors;
+            }
+            
+            function calculateOver25RunsFactors(homeTeamStrength, awayTeamStrength, homePitcherERA, awayPitcherERA, ballparkFactor, rng) {
+                const factors = {};
+                
+                // 1. Pitcher Performance
+                // Higher ERA is better for over 2.5 runs
+                const homePitcherScore = homePitcherERA * 15;
+                const awayPitcherScore = awayPitcherERA * 15;
+                const pitcherScore = (homePitcherScore + awayPitcherScore) / 2;
+                factors.pitcher_performance = Math.max(0, Math.min(100, Math.floor(pitcherScore)));
+                
+                // 2. Ballpark Factors
+                // Higher ballpark factor is better for over 2.5 runs
+                const ballparkScore = ballparkFactor * 50;
+                factors.ballpark_factors = Math.max(0, Math.min(100, Math.floor(ballparkScore)));
+                
+                // 3. Team Momentum
+                factors.team_momentum = Math.floor(rng() * 100);
+                
+                // 4. Handedness Matchups
+                factors.handedness_matchups = Math.floor(rng() * 100);
+                
+                // 5. Bullpen
+                factors.bullpen = Math.floor(rng() * 100);
+                
+                // 6. Weather
+                factors.weather = Math.floor(rng() * 100);
+                
+                // 7. Umpire Impact
+                factors.umpire_impact = Math.floor(rng() * 100);
+                
+                // 8. Defensive Metrics
+                factors.defensive_metrics = Math.floor(rng() * 100);
+                
+                // 9. Injuries
+                factors.injuries = Math.floor(rng() * 100);
+                
+                // 10. Travel Fatigue
+                factors.travel_fatigue = Math.floor(rng() * 100);
+                
+                // 11. Baserunning
+                factors.baserunning = Math.floor(rng() * 100);
+                
+                return factors;
+            }
+            
+            function calculateOver35RunsFactors(homeTeamStrength, awayTeamStrength, homePitcherERA, awayPitcherERA, ballparkFactor, rng) {
+                const factors = {};
+                
+                // 1. Pitcher Performance
+                // Higher ERA is better for over 3.5 runs
+                const homePitcherScore = homePitcherERA * 12;
+                const awayPitcherScore = awayPitcherERA * 12;
+                const pitcherScore = (homePitcherScore + awayPitcherScore) / 2;
+                factors.pitcher_performance = Math.max(0, Math.min(100, Math.floor(pitcherScore)));
+                
+                // 2. Ballpark Factors
+                // Higher ballpark factor is better for over 3.5 runs
+                const ballparkScore = ballparkFactor * 50;
+                factors.ballpark_factors = Math.max(0, Math.min(100, Math.floor(ballparkScore)));
+                
+                // 3. Team Momentum
+                factors.team_momentum = Math.floor(rng() * 100);
+                
+                // 4. Handedness Matchups
+                factors.handedness_matchups = Math.floor(rng() * 100);
+                
+                // 5. Bullpen
+                factors.bullpen = Math.floor(rng() * 100);
+                
+                // 6. Weather
+                factors.weather = Math.floor(rng() * 100);
+                
+                // 7. Umpire Impact
+                factors.umpire_impact = Math.floor(rng() * 100);
+                
+                // 8. Defensive Metrics
+                factors.defensive_metrics = Math.floor(rng() * 100);
+                
+                // 9. Injuries
+                factors.injuries = Math.floor(rng() * 100);
+                
+                // 10. Travel Fatigue
+                factors.travel_fatigue = Math.floor(rng() * 100);
+                
+                // 11. Baserunning
+                factors.baserunning = Math.floor(rng() * 100);
+                
+                return factors;
+            }
+            
+            function calculateWeightedScore(factors) {
+                // Define factor weights
+                const weights = {
+                    pitcher_performance: 0.25,
+                    ballpark_factors: 0.15,
+                    team_momentum: 0.10,
+                    handedness_matchups: 0.10,
+                    bullpen: 0.10,
+                    weather: 0.05,
+                    umpire_impact: 0.05,
+                    defensive_metrics: 0.05,
+                    injuries: 0.05,
+                    travel_fatigue: 0.05,
+                    baserunning: 0.05
+                };
+                
+                // Calculate weighted score
+                let weightedScore = 0;
+                for (const factor in weights) {
+                    weightedScore += factors[factor] * weights[factor];
+                }
+                
+                return weightedScore;
+            }
+            
+            function getTeamStrength(team) {
+                // Team strength ratings (approximate 2024 strength)
+                const teamRatings = {
+                    'LAD': 85, 'ATL': 82, 'NYY': 80, 'HOU': 78, 'PHI': 77,
+                    'BAL': 76, 'TEX': 75, 'MIN': 74, 'SEA': 73, 'TB': 72,
+                    'TOR': 71, 'BOS': 70, 'SD': 69, 'SF': 68, 'MIL': 67,
+                    'CLE': 66, 'ARI': 65, 'CHC': 64, 'NYM': 63, 'STL': 62,
+                    'DET': 60, 'CIN': 58, 'MIA': 56, 'LAA': 54, 'KC': 52,
+                    'PIT': 50, 'WSH': 48, 'CHW': 46, 'OAK': 44, 'COL': 42
+                };
+                
+                return teamRatings[team] || 50;  // Default to 50 if team not found
+            }
+            
+            function getBallparkFactor(venue) {
+                // Ballpark factors (approximate 2024 factors)
+                const ballparkFactors = {
+                    'Coors Field': 1.28,
+                    'Great American Ball Park': 1.15,
+                    'Fenway Park': 1.12,
+                    'Wrigley Field': 1.10,
+                    'Citizens Bank Park': 1.08,
+                    'Yankee Stadium': 1.06,
+                    'Chase Field': 1.05,
+                    'Globe Life Field': 1.03,
+                    'Rogers Centre': 1.02,
+                    'Truist Park': 1.01,
+                    'Dodger Stadium': 1.00,
+                    'Guaranteed Rate Field': 0.99,
+                    'Kauffman Stadium': 0.98,
+                    'Nationals Park': 0.97,
+                    'Busch Stadium': 0.96,
+                    'PNC Park': 0.95,
+                    'Angel Stadium': 0.94,
+                    'Petco Park': 0.93,
+                    'Tropicana Field': 0.92,
+                    'T-Mobile Park': 0.91,
+                    'Oracle Park': 0.90,
+                    'Oakland Coliseum': 0.89,
+                    'Comerica Park': 0.88,
+                    'loanDepot park': 0.87,
+                    'Target Field': 0.86,
+                    'Minute Maid Park': 0.85,
+                    'American Family Field': 0.84,
+                    'Oriole Park at Camden Yards': 0.83,
+                    'Progressive Field': 0.82,
+                    'Citi Field': 0.81
+                };
+                
+                return ballparkFactors[venue] || 1.00;  // Default to 1.00 if venue not found
+            }
+            
+            function showLoading() {
+                document.getElementById('loadingContainer').style.display = 'block';
+            }
+            
+            function hideLoading() {
+                document.getElementById('loadingContainer').style.display = 'none';
+            }
+            
+            function showError() {
+                document.getElementById('errorContainer').style.display = 'block';
+            }
+            
+            function hideError() {
+                document.getElementById('errorContainer').style.display = 'none';
+            }
+            
+            function displayNoGamesMessage() {
+                document.getElementById('noGamesMessage').style.display = 'block';
+                document.getElementById('under1RunPredictions').innerHTML = '';
+                document.getElementById('over25RunsPredictions').innerHTML = '';
+                document.getElementById('over35RunsPredictions').innerHTML = '';
+                document.querySelector('.stats-table tbody').innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>

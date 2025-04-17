@@ -1,0 +1,692 @@
+[
+  {
+    "id": "778268",
+    "date": "2025-04-18",
+    "time": "2025-04-18T18:20:00Z",
+    "venue": "Wrigley Field",
+    "home_team": {
+      "name": "Chicago Cubs",
+      "abbreviation": "CHC",
+      "display_name": "Chicago Cubs",
+      "logo": "https://www.mlbstatic.com/team-logos/CHC.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:02"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Arizona Diamondbacks",
+      "abbreviation": "AZ",
+      "display_name": "Arizona Diamondbacks",
+      "logo": "https://www.mlbstatic.com/team-logos/AZ.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:02"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778277",
+    "date": "2025-04-18",
+    "time": "2025-04-18T22:40:00Z",
+    "venue": "Comerica Park",
+    "home_team": {
+      "name": "Detroit Tigers",
+      "abbreviation": "DET",
+      "display_name": "Detroit Tigers",
+      "logo": "https://www.mlbstatic.com/team-logos/DET.svg",
+      "probable_pitcher": {
+        "name": "Jackson Jobe",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Kansas City Royals",
+      "abbreviation": "KC",
+      "display_name": "Kansas City Royals",
+      "logo": "https://www.mlbstatic.com/team-logos/KC.svg",
+      "probable_pitcher": {
+        "name": "Cole Ragans",
+        "stats": {
+          "era": 3.06,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778271",
+    "date": "2025-04-18",
+    "time": "2025-04-18T22:40:00Z",
+    "venue": "PNC Park",
+    "home_team": {
+      "name": "Pittsburgh Pirates",
+      "abbreviation": "PIT",
+      "display_name": "Pittsburgh Pirates",
+      "logo": "https://www.mlbstatic.com/team-logos/PIT.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Cleveland Guardians",
+      "abbreviation": "CLE",
+      "display_name": "Cleveland Guardians",
+      "logo": "https://www.mlbstatic.com/team-logos/CLE.svg",
+      "probable_pitcher": {
+        "name": "Luis L. Ortiz",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778274",
+    "date": "2025-04-18",
+    "time": "2025-04-18T22:45:00Z",
+    "venue": "Citizens Bank Park",
+    "home_team": {
+      "name": "Philadelphia Phillies",
+      "abbreviation": "PHI",
+      "display_name": "Philadelphia Phillies",
+      "logo": "https://www.mlbstatic.com/team-logos/PHI.svg",
+      "probable_pitcher": {
+        "name": "Zack Wheeler",
+        "stats": {
+          "era": 3.07,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Miami Marlins",
+      "abbreviation": "MIA",
+      "display_name": "Miami Marlins",
+      "logo": "https://www.mlbstatic.com/team-logos/MIA.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778276",
+    "date": "2025-04-18",
+    "time": "2025-04-18T23:05:00Z",
+    "venue": "Oriole Park at Camden Yards",
+    "home_team": {
+      "name": "Baltimore Orioles",
+      "abbreviation": "BAL",
+      "display_name": "Baltimore Orioles",
+      "logo": "https://www.mlbstatic.com/team-logos/BAL.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Cincinnati Reds",
+      "abbreviation": "CIN",
+      "display_name": "Cincinnati Reds",
+      "logo": "https://www.mlbstatic.com/team-logos/CIN.svg",
+      "probable_pitcher": {
+        "name": "Andrew Abbott",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778272",
+    "date": "2025-04-18",
+    "time": "2025-04-18T23:05:00Z",
+    "venue": "George M. Steinbrenner Field",
+    "home_team": {
+      "name": "Tampa Bay Rays",
+      "abbreviation": "TB",
+      "display_name": "Tampa Bay Rays",
+      "logo": "https://www.mlbstatic.com/team-logos/TB.svg",
+      "probable_pitcher": {
+        "name": "Drew Rasmussen",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "away_team": {
+      "name": "New York Yankees",
+      "abbreviation": "NYY",
+      "display_name": "New York Yankees",
+      "logo": "https://www.mlbstatic.com/team-logos/NYY.svg",
+      "probable_pitcher": {
+        "name": "Carlos Rod\u00f3n",
+        "stats": {
+          "era": 3.93,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778273",
+    "date": "2025-04-18",
+    "time": "2025-04-18T23:07:00Z",
+    "venue": "Rogers Centre",
+    "home_team": {
+      "name": "Toronto Blue Jays",
+      "abbreviation": "TOR",
+      "display_name": "Toronto Blue Jays",
+      "logo": "https://www.mlbstatic.com/team-logos/TOR.svg",
+      "probable_pitcher": {
+        "name": "Bowden Francis",
+        "stats": {
+          "era": 4.56,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Seattle Mariners",
+      "abbreviation": "SEA",
+      "display_name": "Seattle Mariners",
+      "logo": "https://www.mlbstatic.com/team-logos/SEA.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:03"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778270",
+    "date": "2025-04-18",
+    "time": "2025-04-18T23:10:00Z",
+    "venue": "Citi Field",
+    "home_team": {
+      "name": "New York Mets",
+      "abbreviation": "NYM",
+      "display_name": "New York Mets",
+      "logo": "https://www.mlbstatic.com/team-logos/NYM.svg",
+      "probable_pitcher": {
+        "name": "David Peterson",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "St. Louis Cardinals",
+      "abbreviation": "STL",
+      "display_name": "St. Louis Cardinals",
+      "logo": "https://www.mlbstatic.com/team-logos/STL.svg",
+      "probable_pitcher": {
+        "name": "Miles Mikolas",
+        "stats": {
+          "era": 4.23,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778275",
+    "date": "2025-04-18",
+    "time": "2025-04-18T23:10:00Z",
+    "venue": "Fenway Park",
+    "home_team": {
+      "name": "Boston Red Sox",
+      "abbreviation": "BOS",
+      "display_name": "Boston Red Sox",
+      "logo": "https://www.mlbstatic.com/team-logos/BOS.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Chicago White Sox",
+      "abbreviation": "CWS",
+      "display_name": "Chicago White Sox",
+      "logo": "https://www.mlbstatic.com/team-logos/CWS.svg",
+      "probable_pitcher": {
+        "name": "Mart\u00edn P\u00e9rez",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778284",
+    "date": "2025-04-18",
+    "time": "2025-04-18T23:15:00Z",
+    "venue": "Truist Park",
+    "home_team": {
+      "name": "Atlanta Braves",
+      "abbreviation": "ATL",
+      "display_name": "Atlanta Braves",
+      "logo": "https://www.mlbstatic.com/team-logos/ATL.svg",
+      "probable_pitcher": {
+        "name": "Bryce Elder",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Minnesota Twins",
+      "abbreviation": "MIN",
+      "display_name": "Minnesota Twins",
+      "logo": "https://www.mlbstatic.com/team-logos/MIN.svg",
+      "probable_pitcher": {
+        "name": "Chris Paddack",
+        "stats": {
+          "era": 4.02,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778263",
+    "date": "2025-04-18",
+    "time": "2025-04-19T00:05:00Z",
+    "venue": "Globe Life Field",
+    "home_team": {
+      "name": "Texas Rangers",
+      "abbreviation": "TEX",
+      "display_name": "Texas Rangers",
+      "logo": "https://www.mlbstatic.com/team-logos/TEX.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Los Angeles Dodgers",
+      "abbreviation": "LAD",
+      "display_name": "Los Angeles Dodgers",
+      "logo": "https://www.mlbstatic.com/team-logos/LAD.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778269",
+    "date": "2025-04-18",
+    "time": "2025-04-19T00:10:00Z",
+    "venue": "Daikin Park",
+    "home_team": {
+      "name": "Houston Astros",
+      "abbreviation": "HOU",
+      "display_name": "Houston Astros",
+      "logo": "https://www.mlbstatic.com/team-logos/HOU.svg",
+      "probable_pitcher": {
+        "name": "Ryan Gusto",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "San Diego Padres",
+      "abbreviation": "SD",
+      "display_name": "San Diego Padres",
+      "logo": "https://www.mlbstatic.com/team-logos/SD.svg",
+      "probable_pitcher": {
+        "name": "Kyle Hart",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778261",
+    "date": "2025-04-18",
+    "time": "2025-04-19T00:10:00Z",
+    "venue": "American Family Field",
+    "home_team": {
+      "name": "Milwaukee Brewers",
+      "abbreviation": "MIL",
+      "display_name": "Milwaukee Brewers",
+      "logo": "https://www.mlbstatic.com/team-logos/MIL.svg",
+      "probable_pitcher": {
+        "name": "Freddy Peralta",
+        "stats": {
+          "era": 3.2,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Athletics",
+      "abbreviation": "ATH",
+      "display_name": "Athletics",
+      "logo": "https://www.mlbstatic.com/team-logos/ATH.svg",
+      "probable_pitcher": {
+        "name": "J.T. Ginn",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778266",
+    "date": "2025-04-18",
+    "time": "2025-04-19T00:40:00Z",
+    "venue": "Coors Field",
+    "home_team": {
+      "name": "Colorado Rockies",
+      "abbreviation": "COL",
+      "display_name": "Colorado Rockies",
+      "logo": "https://www.mlbstatic.com/team-logos/COL.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "Washington Nationals",
+      "abbreviation": "WSH",
+      "display_name": "Washington Nationals",
+      "logo": "https://www.mlbstatic.com/team-logos/WSH.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  },
+  {
+    "id": "778260",
+    "date": "2025-04-18",
+    "time": "2025-04-19T01:38:00Z",
+    "venue": "Angel Stadium",
+    "home_team": {
+      "name": "Los Angeles Angels",
+      "abbreviation": "LAA",
+      "display_name": "Los Angeles Angels",
+      "logo": "https://www.mlbstatic.com/team-logos/LAA.svg",
+      "probable_pitcher": {
+        "name": "TBD",
+        "stats": {
+          "era": "N/A",
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "not-found",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "away_team": {
+      "name": "San Francisco Giants",
+      "abbreviation": "SF",
+      "display_name": "San Francisco Giants",
+      "logo": "https://www.mlbstatic.com/team-logos/SF.svg",
+      "probable_pitcher": {
+        "name": "Logan Webb",
+        "stats": {
+          "era": 3.25,
+          "whip": 1.25,
+          "strikeouts": 100,
+          "innings_pitched": 100,
+          "era_source": "MLB Stats API (Fallback)",
+          "last_updated": "2025-04-16 17:42:04"
+        }
+      }
+    },
+    "weather": {
+      "temperature": 75,
+      "condition": "Clear",
+      "wind": "10 mph"
+    },
+    "ballpark_factor": 1.0
+  }
+]
